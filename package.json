@@ -1,0 +1,40 @@
+{
+  "name": "pakistani-sports-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bootstrap.js",
+  "scripts": {
+    "start": "node ./bootstrap.js",
+    "start:local": "set NODE_ENV=local&& nodemon ./bootstrap.js",
+    "start:dev": "set NODE_ENV=dev&& nodemon ./bootstrap.js",
+    "start:prod": "set NODE_ENV=prod&& nodemon ./bootstrap.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamzashakir99/pakistani-sports-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hamzashakir99/pakistani-sports-backend/issues"
+  },
+  "homepage": "https://github.com/hamzashakir99/pakistani-sports-backend#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.14.2",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.3",
+    "mongoose": "^6.4.0",
+    "node-schedule": "^2.1.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "validator": "^13.7.0"
+  }
+}
