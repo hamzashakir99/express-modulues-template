@@ -22,3 +22,4 @@ If you want to add new modules that not part of any modulus system like schedule
 2. It based on modulus system
 3. JwT integrated (for google, facebook, etc you need to integrate manually)
 4. Error handling defined
+5. All versions are updated at 07/02/2022
