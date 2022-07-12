@@ -1,6 +1,8 @@
 global.dotENV = require('dotenv')
 global.express = require("express");
 global.session = require("express-session");
+global.createError = require("http-errors");
+global.logger = require('morgan');
 global.app = express();
 global.router = express.Router();
 global.cookieParser = require("cookie-parser");
@@ -9,6 +11,7 @@ global.fs = require("fs");
 global.passport = require("passport");
 global.passportLocal = require("passport-local");
 global.passportJWT = require("passport-jwt");
+global.googleStrategy = require( 'passport-google-oauth2' ).Strategy;
 global.mongoose = require("mongoose");
 global.JWT = require("jsonwebtoken");
 global.bodyParser = require("body-parser");

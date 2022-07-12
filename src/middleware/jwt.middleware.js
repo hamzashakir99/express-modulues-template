@@ -1,7 +1,8 @@
 router.use((req, res, next) => {
   if (req.path.search("auth/") > -1) {
     next();
-  } else {
+  }
+  else {
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
         if (err || !user) {
           let errMsg = info ? info.message : err.message;
