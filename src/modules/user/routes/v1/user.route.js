@@ -1,39 +1,35 @@
 router
     .get(
-        '/users',
-        actions.user.list.getUsers
+        '/profile',
+        actions.user.list.profile
     )
-    .get("/auth/login/success", (req, res) => {
-        if (req.user) {
-            res.status(200).json({
-                error: false,
-                message: "Successfully Login In",
-                user: req.user,
-            });
-        } else {
-            res.status(403).json({ error: true, message: "Not Authorized" });
-        }
-    })
-    .get("/auth/login/failed", (req, res) => {
-        res.status(401).json({
-            error: true,
-            message: "Log in failure",
-        });
-    })
-    .get("/auth/google", passport.authenticate("google", ["profile", "email"]))
     .get(
-        "/auth/google/callback",
+        '/auth/google',
+        (req, res, next)=>{
+            const { device_type, device_vendor, os, os_version, browser, browser_version } = req.query
+            if(device_type && device_vendor && os && os_version && browser && browser_version){
+                req.session.device_type = device_type;
+                req.session.device_vendor = device_vendor;
+                req.session.os = os;
+                req.session.os_version = os_version;
+                req.session.browser = browser;
+                req.session.browser_version = browser_version;
+                next()
+            }
+            else {
+                res.redirect(`${process.env.FRONTEND_URL}/login?result=${messages.generalError}`)
+            }
+        },
+        passport.authenticate("google", ["profile", "email"])
+    )
+    .get(
+        '/auth/google/callback',
         passport.authenticate("google", {
-            failureRedirect: `/api/v1/auth/login/failed`,
+            failureRedirect: `${process.env.FRONTEND_URL}/login?result=${messages.generalError}`,
             session: false
         }), (req, res)=>{
-            console.log("Q", req)
             const token = req.user.jwt_token;
-            res.redirect(`${process.env.FRONTEND_URL}?token=${token}`)
+            res.redirect(`${process.env.FRONTEND_URL}/dashboard?token=${token}`)
         }
     )
-    .get("/auth/logout", (req, res) => {
-        req.logout();
-        res.redirect("/api/v1/auth/users");
-    });
 module.exports = router;

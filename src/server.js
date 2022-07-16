@@ -4,6 +4,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
+app.use(passport.authenticate('session'));
 const staticPath = path.join(__dirname, './static/');
 app.use('/static', express.static(staticPath));
 const corsOptions = {
@@ -17,14 +18,13 @@ require("./validators/index")
 require("./classes/index");
 require("./middleware/index");
 require("./modules/index");
-require("../config/strategies");
+require("../config/strategies/index");
 // global.storage = require("../config/multer");
-// global.firebase = require("../config/firebase");
+global.firebase = require("../config/firebase");
 require('./schedule')
 // require("./seeders/setting.seeders");
 // require("./seeders/user.seeders");
 // require("./seeders/dataset.seeders");
-
 
 // catch 404 and forward to error handler
 app.use((_req, _res, next) => {

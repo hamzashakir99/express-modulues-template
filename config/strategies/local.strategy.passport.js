@@ -12,9 +12,7 @@ module.exports = ()=>{
       },
       async (_req, email, _password, done) => {
         try {
-          const user = await schema.users.findOne({
-            email: email,
-          });
+          const user = await schema.users.findOne({email});
           if (!user) {
             return done(null, false, { message: messages.noOneRegisteredWithEmail });
           }

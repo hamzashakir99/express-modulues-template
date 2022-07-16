@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema(
     user_name: {
       type: String,
       trim: true,
-      required: true,
       unique: true,
       validate(value) {
         if (!validator.matches(value, dataConstraint.USERNAME)) {
@@ -33,10 +32,33 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: null,
     },
-    jwt_token: {
-      type: String,
-      default: null,
-    },
+    jwt_token: [
+      {
+        token: {
+          type: String,
+          default: null
+        },
+        device_info: {
+          type: Object,
+          default: {
+            device_type: null,
+            device_vendor: null,
+            os: null,
+            os_version: null,
+            browser: null,
+            browser_version: null,
+          }
+        },
+        login_date: {
+          type: Date,
+          default: new Date()
+        },
+        notification_token: {
+          type: String,
+          default: null
+        }
+      }
+    ],
     email_verify: {
       type: Boolean,
       default: false
@@ -48,7 +70,7 @@ const userSchema = new mongoose.Schema(
     },
     user_type: {
       type: String,
-      required: true,
+      default: 'user',
       enum: ['user', 'admin']
     },
     verification_code: {
@@ -64,34 +86,31 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null
     },
-    profile_image_object: {
-      type: Object,
-      default: null
-    },
     bio: {
       type: String,
       default: null
     },
-    phone_number: {
-      type: String,
-      default: null
-    },
-    phone_info: {
-      type: Object,
-      default: null
-    },
-    social: {
-      type: Object,
-      default: null
-    },
-    setting: {
-      type: Object,
-      default: {
-        email_visible: true,
-        number_visible: true,
-        profile_visible: true,
-        social_visible: true
-      }
+    google_details: {
+        is_google_connected: {
+          type: Boolean,
+          default: false
+        },
+        email: {
+          type: String,
+          default: null
+        },
+        access_token: {
+          type: String,
+          default: null
+        },
+        id: {
+          type: String,
+          default: null
+        },
+        email_verified: {
+          type: Boolean,
+          default: false
+        }
     },
     notification: [
       {

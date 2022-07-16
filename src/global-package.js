@@ -23,3 +23,4 @@ global.bcrypt = require('bcrypt');
 global.moment = require('moment');
 global.schedule = require('node-schedule');
 global.https = require('https');
+global.firebaseAdmin = require("firebase-admin");

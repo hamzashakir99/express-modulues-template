@@ -5,11 +5,14 @@ module.exports = () => {
                 clientID: process.env.GOOGLE_CLIENT_ID,
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET,
                 callbackURL: "/api/v1/auth/google/callback",
-                scope: ["profile", "email"]
+                scope: ["profile", "email"],
+                passReqToCallback: true
             },
-            async (accessToken, _refreshToken, profile, callback) => {
+            async (req, accessToken, _refreshToken, profile, callback) => {
                 try {
-                    let user = await schema.users.findOne({"google_details.id": profile.id});
+                    const { device_type, device_vendor, os, os_version, browser, browser_version } = req.session;
+                    console.log(req.session.device_type)
+                    let user = await schema.users.findOne({ "google_details.id": profile.id });
                     if (!user) {
                         const data = new schema.users({
                             "email": profile.email,
@@ -23,17 +26,39 @@ module.exports = () => {
                         })
                         user = await data.save()
                     }
-                    const token = await JWT.sign({ _id: profile.id, email: profile.email, accessToken, provider: 'google' }, process.env.JWT_SECRET, {
-                        expiresIn: process.env.TOKEN_EXPIRY,
-                    });
                     user = await schema.users.findOneAndUpdate({
                         "google_details.id": profile.id
                     }, {
-                        $set: {
-                            "jwt_token": token,
+                        $push: {
+                            jwt_token: {
+                                "login_date": new Date(),
+                                "device_info": {
+                                    device_type,
+                                    device_vendor,
+                                    os,
+                                    os_version,
+                                    browser,
+                                    browser_version,
+                                }
+                            }
                         }
-                    }, {new: true})
-                    return callback(null, user);
+                    }, { new: true })
+                    const token = await JWT.sign({ _id: profile.id, email: profile.email, provider: 'google', deviceIdentity: user.jwt_token[user.jwt_token.length - 1]._id.toString() }, process.env.JWT_SECRET, {
+                        expiresIn: process.env.TOKEN_EXPIRY,
+                    });
+                    await schema.users.updateOne({
+                        "google_details.id": profile.id
+                    }, {
+                        $set: {
+                            "jwt_token.$[outer].token": token,
+                        }
+                    }, {
+                        arrayFilters: [{ "outer._id": user.jwt_token[user.jwt_token.length - 1]._id }],
+                    })
+                    return callback(null, {
+                        ...user._doc,
+                        jwt_token: token
+                    });
                 } catch (error) {
                     console.log(error)
                     callback(error);

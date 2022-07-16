@@ -18,7 +18,6 @@ module.exports = {
   emailExists: "Email already exists!",
   sessionExpiry: "Session has been expired!",
   codeExpired: "Your code has expired.",
-  invalidId: "Invalid Id!",
   weakPassword: 'Invalid password, please use at-least one uppercase ( A-Z), one digit ( 0-9) and one character.',
   userExists: (param) => {
     return `Another user with this ${param} already exists.`
